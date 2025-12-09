@@ -86,14 +86,16 @@ const uuidSchema = Joi.string()
 
 /**
  * MongoDB ObjectId validation schema.
- * Validates 24-character hexadecimal ObjectId format.
+ * Validates 24-character hexadecimal ObjectId format using Joi's hex() method.
  * 
  * @type {Joi.StringSchema}
  */
 const idSchema = Joi.string()
-  .pattern(/^[a-fA-F0-9]{24}$/)
+  .hex()
+  .length(24)
   .messages({
-    'string.pattern.base': 'Invalid ID format (must be 24-character hex string)',
+    'string.hex': 'Invalid ID format (must contain only hexadecimal characters)',
+    'string.length': 'Invalid ID format (must be exactly 24 characters)',
     'string.empty': 'ID is required'
   });
 
@@ -126,14 +128,16 @@ const booleanSchema = Joi.boolean()
 
 /**
  * Date validation schema.
- * Validates ISO 8601 date format.
+ * Validates ISO 8601 date format as a string.
+ * Uses Joi.string().isoDate() for string-based date validation.
  * 
- * @type {Joi.DateSchema}
+ * @type {Joi.StringSchema}
  */
-const dateSchema = Joi.date()
-  .iso()
+const dateSchema = Joi.string()
+  .isoDate()
   .messages({
-    'date.format': 'Date must be in ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ)'
+    'string.isoDate': 'Date must be in ISO 8601 format (YYYY-MM-DDTHH:mm:ss.sssZ)',
+    'string.empty': 'Date is required'
   });
 
 /**
@@ -185,16 +189,33 @@ const sortSchema = Joi.string()
   });
 
 /**
- * Pagination schema object.
+ * Pagination schema object using Joi.object().
  * Combines page, limit, and sort for query parameter validation.
+ * Can be used directly for validating pagination query parameters.
  * 
- * @type {Object}
+ * @type {Joi.ObjectSchema}
+ * @property {Joi.NumberSchema} page - Page number (default: 1)
+ * @property {Joi.NumberSchema} limit - Items per page (default: 10, max: 100)
+ * @property {Joi.StringSchema} sort - Sort field/order (default: 'createdAt')
+ * 
+ * @example
+ * // Use directly for query validation
+ * const { error, value } = paginationSchema.validate(req.query);
+ * 
+ * @example
+ * // Compose with other schemas
+ * const searchSchema = Joi.object({
+ *   ...paginationSchema.describe().keys,
+ *   query: Joi.string()
+ * });
  */
-const paginationSchema = {
+const paginationSchema = Joi.object({
   page: pageSchema,
   limit: limitSchema,
   sort: sortSchema
-};
+}).messages({
+  'object.base': 'Pagination parameters must be an object'
+});
 
 module.exports = {
   emailSchema,
