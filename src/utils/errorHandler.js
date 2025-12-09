@@ -44,8 +44,14 @@ const getStatusCode = (err) => {
   if (err.statusCode) return err.statusCode;
   if (err.status) return err.status;
   
-  // Handle Joi ValidationError
+  // Handle Joi ValidationError (direct or via express-joi-validation)
   if (err.name === 'ValidationError' || err.isJoi) return 400;
+  
+  // Handle express-joi-validation wrapped errors
+  if (err.error && (err.error.isJoi || err.error.name === 'ValidationError')) return 400;
+  
+  // Handle type field from express-joi-validation
+  if (err.type && ['body', 'query', 'params', 'headers'].includes(err.type)) return 400;
   
   // Handle JSON parsing SyntaxError
   if (err instanceof SyntaxError && err.message.includes('JSON')) return 400;
@@ -89,30 +95,56 @@ const errorHandler = (err, req, res, next) => {
   // Construct response based on environment
   if (isProduction()) {
     // PRODUCTION: Return generic error message without sensitive details
+    // For validation errors (400), we can include field-level errors
+    let prodMessage = 'An unexpected error occurred';
+    let prodDetails = null;
+    
+    if (statusCode === 400) {
+      prodMessage = 'Bad Request: Invalid input provided';
+      // In production, include which fields failed but not the exact values
+      if (err.error && err.error.details) {
+        prodDetails = err.error.details.map(d => ({
+          field: d.path.join('.'),
+          message: d.message.replace(/"[^"]*"/g, 'value') // Remove actual values
+        }));
+      }
+    }
+    
     const response = {
       success: false,
       error: {
-        message: statusCode === 400 
-          ? 'Bad Request: Invalid input provided'
-          : 'An unexpected error occurred',
+        message: prodMessage,
         statusCode,
-        errorReferenceId // Include reference ID for support debugging
+        errorReferenceId, // Include reference ID for support debugging
+        ...(prodDetails && { validationErrors: prodDetails })
       }
     };
     
     return res.status(statusCode).json(response);
   }
   
+  // Extract validation details from express-joi-validation
+  let validationDetails = null;
+  if (err.error && err.error.details) {
+    validationDetails = err.error.details.map(d => ({
+      field: d.path.join('.'),
+      message: d.message,
+      type: d.type
+    }));
+  } else if (err.details) {
+    validationDetails = err.details;
+  }
+
   // DEVELOPMENT: Return full error details for debugging
   const response = {
     success: false,
     error: {
-      message: err.message || 'An error occurred',
-      name: err.name || 'Error',
+      message: err.error?.message || err.message || 'An error occurred',
+      name: err.error?.name || err.name || 'Error',
       statusCode,
       errorReferenceId,
       stack: err.stack,
-      details: err.details || null // Include Joi validation details if present
+      details: validationDetails // Include Joi validation details if present
     }
   };
   
