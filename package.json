@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Security-hardened Express.js API with helmet, CORS, rate limiting, and input validation",
   "main": "src/server.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
