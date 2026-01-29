@@ -5,7 +5,7 @@
  */
 module.exports = {
   testEnvironment: 'node',
-  testMatch: ['**/server.test.js'],
+  testMatch: ['**/*.test.js'],
   verbose: true,
   testTimeout: 10000,
   clearMocks: true,
