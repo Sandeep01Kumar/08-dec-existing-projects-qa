@@ -1,0 +1,285 @@
+# ==============================================================================
+# .gitignore - Node.js Security Project
+# ==============================================================================
+# This file excludes sensitive and generated files from version control to
+# prevent accidental exposure of secrets, credentials, and unnecessary files.
+# ==============================================================================
+
+# ==============================================================================
+# ENVIRONMENT VARIABLES - CRITICAL SECURITY
+# ==============================================================================
+# Environment files contain sensitive configuration like API keys, database
+# credentials, and other secrets. NEVER commit these to version control.
+# Only .env.example (template without real values) should be committed.
+# ==============================================================================
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+.env.staging.local
+.env.*
+!.env.example
+
+# ==============================================================================
+# SSL/TLS CERTIFICATES AND PRIVATE KEYS - CRITICAL SECURITY
+# ==============================================================================
+# SSL certificates and private keys must NEVER be committed to version control.
+# These files contain cryptographic material that could compromise HTTPS security.
+# Store certificates securely and reference them via environment variables.
+# ==============================================================================
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+ssl/
+certs/
+certificates/
+private/
+
+# ==============================================================================
+# DEPENDENCIES
+# ==============================================================================
+# Node.js dependencies should not be committed. They are installed via npm/yarn
+# using package.json and package-lock.json (which SHOULD be committed).
+# ==============================================================================
+node_modules/
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ==============================================================================
+# LOG FILES
+# ==============================================================================
+# Log files may contain sensitive information like request data, user info,
+# or system details. Exclude all log files from version control.
+# ==============================================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ==============================================================================
+# OPERATING SYSTEM FILES
+# ==============================================================================
+# OS-generated files that should not be in version control.
+# ==============================================================================
+
+# macOS
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ==============================================================================
+# IDE AND EDITOR CONFIGURATIONS
+# ==============================================================================
+# IDE-specific files and directories. These contain user-specific settings
+# and should not be shared across team members.
+# ==============================================================================
+
+# JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ==============================================================================
+# BUILD AND DISTRIBUTION DIRECTORIES
+# ==============================================================================
+# Compiled and built files should not be committed. They are generated from
+# source code and can be recreated by running the build process.
+# ==============================================================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.output/
+.cache/
+
+# ==============================================================================
+# TEST COVERAGE AND REPORTS
+# ==============================================================================
+# Test coverage reports and related artifacts. These are generated during
+# testing and should not be committed.
+# ==============================================================================
+coverage/
+.nyc_output/
+*.lcov
+.coverage
+htmlcov/
+test-results/
+test-reports/
+junit.xml
+
+# ==============================================================================
+# TEMPORARY FILES
+# ==============================================================================
+# Temporary files created during development or by various tools.
+# ==============================================================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.orig
+tmp/
+temp/
+
+# ==============================================================================
+# SENSITIVE DATA AND SECRETS - ADDITIONAL SECURITY
+# ==============================================================================
+# Additional patterns to catch potentially sensitive files that might
+# accidentally be created during development.
+# ==============================================================================
+
+# Secret files
+*.secret
+*.secrets
+secrets/
+.secrets/
+secrets.json
+secrets.yml
+secrets.yaml
+
+# Credential files
+credentials/
+.credentials/
+*.credentials
+service-account*.json
+google-credentials.json
+firebase-adminsdk*.json
+
+# SSH keys (should never be in a project repository)
+id_rsa
+id_rsa.pub
+id_dsa
+id_dsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+*.ppk
+
+# GPG keys
+*.gpg
+*.asc
+secring.*
+
+# ==============================================================================
+# DOCKER (if used)
+# ==============================================================================
+# Docker-related files that might contain sensitive configuration.
+# Note: Dockerfile and docker-compose.yml should typically be committed.
+# ==============================================================================
+.docker/
+docker-compose.override.yml
+docker-compose.*.yml
+!docker-compose.yml
+!docker-compose.example.yml
+
+# ==============================================================================
+# MISCELLANEOUS
+# ==============================================================================
+# Other files and patterns that should be excluded.
+# ==============================================================================
+
+# Package manager locks (keep package-lock.json for npm)
+# Uncomment if using yarn exclusively:
+# package-lock.json
+
+# Debug files
+.eslintcache
+.stylelintcache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ==============================================================================
+# PROJECT-SPECIFIC EXCLUSIONS
+# ==============================================================================
+# Add any project-specific files or patterns below this line.
+# ==============================================================================
