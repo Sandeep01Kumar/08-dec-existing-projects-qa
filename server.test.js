@@ -4,9 +4,10 @@
  * Comprehensive Jest Test Suite for server.js
  * 
  * This test suite validates the robust server implementation
- * covering all 21 tests specified in the Agent Action Plan:
+ * covering all 22 tests specified in the Agent Action Plan:
  * - Health Check Endpoint tests (2 tests)
  * - Root Endpoint tests (1 test)
+ * - Good Evening Endpoint tests (1 test)
  * - User Registration Validation tests (6 tests)
  * - Resource ID Parameter Validation tests (4 tests)
  * - Pagination Query Parameter Validation tests (4 tests)
@@ -87,6 +88,28 @@ describe('Robust Server.js Test Suite', () => {
       expect(response.body.message).toContain('Welcome');
       expect(response.body).toHaveProperty('version');
       expect(response.body).toHaveProperty('timestamp');
+    });
+  });
+  
+  // ==========================================================================
+  // GOOD EVENING ENDPOINT TESTS (1 test)
+  // ==========================================================================
+  
+  describe('Good Evening Endpoint', () => {
+    
+    /**
+     * Test 22: Returns 200 with "Good evening" message
+     */
+    test('should return 200 with Good evening message', async () => {
+      const response = await request(app)
+        .get('/good-evening')
+        .expect(200)
+        .expect('Content-Type', /json/);
+      
+      expect(response.body).toHaveProperty('message', 'Good evening');
+      expect(response.body).toHaveProperty('timestamp');
+      expect(typeof response.body.timestamp).toBe('string');
+      expect(new Date(response.body.timestamp).toISOString()).toBe(response.body.timestamp);
     });
   });
   
