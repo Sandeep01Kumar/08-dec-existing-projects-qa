@@ -423,8 +423,23 @@ app.get('/api/docs', (req, res) => {
       { method: 'GET', path: '/health', description: 'Health check' },
       { method: 'POST', path: '/api/users', description: 'Create user' },
       { method: 'GET', path: '/api/resources/:id', description: 'Get resource by ID' },
-      { method: 'GET', path: '/api/items', description: 'Get paginated items' }
+      { method: 'GET', path: '/api/items', description: 'Get paginated items' },
+      { method: 'GET', path: '/good-evening', description: 'Returns Good evening greeting' }
     ]
+  });
+});
+
+/**
+ * Good evening endpoint
+ * Returns a "Good evening" greeting message with a timestamp
+ *
+ * @route GET /good-evening
+ * @returns {Object} Greeting message with timestamp
+ */
+app.get('/good-evening', (req, res) => {
+  res.status(200).json({
+    message: 'Good evening',
+    timestamp: new Date().toISOString()
   });
 });
 

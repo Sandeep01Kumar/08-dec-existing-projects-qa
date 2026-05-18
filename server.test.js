@@ -4,7 +4,7 @@
  * Comprehensive Jest Test Suite for server.js
  * 
  * This test suite validates the robust server implementation
- * covering all 21 tests specified in the Agent Action Plan:
+ * covering all 22 tests:
  * - Health Check Endpoint tests (2 tests)
  * - Root Endpoint tests (1 test)
  * - User Registration Validation tests (6 tests)
@@ -12,6 +12,7 @@
  * - Pagination Query Parameter Validation tests (4 tests)
  * - Error Handling tests (3 tests)
  * - Resource Tracking tests (1 test)
+ * - Good Evening Endpoint tests (1 test)
  * 
  * @module server.test
  */
@@ -432,6 +433,30 @@ describe('Robust Server.js Test Suite', () => {
       expect(typeof resources.removeTimer).toBe('function');
       expect(typeof resources.clearAllTimers).toBe('function');
       expect(typeof resources.cleanup).toBe('function');
+    });
+  });
+  
+  // ==========================================================================
+  // GOOD EVENING ENDPOINT TESTS (1 test)
+  // ==========================================================================
+  
+  describe('Good Evening Endpoint', () => {
+    
+    /**
+     * Test 22: Returns 200 with "Good evening" greeting and ISO-8601 timestamp
+     */
+    test('should return 200 with Good evening message', async () => {
+      const response = await request(app)
+        .get('/good-evening')
+        .expect(200)
+        .expect('Content-Type', /json/);
+      
+      expect(response.body).toHaveProperty('message', 'Good evening');
+      expect(response.body).toHaveProperty('timestamp');
+      expect(typeof response.body.timestamp).toBe('string');
+      expect(response.body.timestamp.length).toBeGreaterThan(0);
+      // Verify timestamp is a valid ISO-8601 string (round-trips through Date)
+      expect(new Date(response.body.timestamp).toISOString()).toBe(response.body.timestamp);
     });
   });
 });
